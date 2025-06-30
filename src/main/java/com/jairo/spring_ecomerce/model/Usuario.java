@@ -9,7 +9,7 @@ import java.util.List;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = {"productos", "ordenes"})
 @Entity
 @Table(name = "usuarios")  // recomendable usar nombre de tablas en plural
 public class Usuario {

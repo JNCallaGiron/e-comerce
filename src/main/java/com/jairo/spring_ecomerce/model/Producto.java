@@ -6,7 +6,7 @@ import lombok.*;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
+@ToString(exclude = "usuario")
 @Entity
 @Table(name= "productos")
 public class Producto {
