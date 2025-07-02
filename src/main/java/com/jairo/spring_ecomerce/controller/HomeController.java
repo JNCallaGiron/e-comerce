@@ -51,8 +51,8 @@ public class HomeController {
 
     //
     @PostMapping("/cart")
-    public String addCart(@RequestParam Long    id,
-                          @RequestParam Integer cantidad,//atento al tipo dedato int puede causar un error
+    public String addCart(@RequestParam Long id,
+                          @RequestParam Integer cantidad,
                           Model model){
         DetalleOrden detalleOrden = new DetalleOrden();
         Producto producto = new Producto();
@@ -60,25 +60,33 @@ public class HomeController {
 
         Optional<Producto> optionalProducto = productoService.getProducto(id);
         log.info("Producto añadido: {}", optionalProducto.get());
-        log.info("Cantidad: {}",cantidad);
-        producto=optionalProducto.get();
+        log.info("Cantidad: {}", cantidad);
+        producto = optionalProducto.get();
 
         detalleOrden.setCantidad(cantidad);
         detalleOrden.setPrecio(producto.getPrecio());
         detalleOrden.setNombre(producto.getNombre());
-        detalleOrden.setTotal(producto.getPrecio()* cantidad);
+        detalleOrden.setTotal(producto.getPrecio() * cantidad);
         detalleOrden.setProducto(producto);
 
-        detalles.add(detalleOrden);
+        // Validar que el producto no se añada 2 veces
+        Long idProducto = producto.getId();
+        boolean ingresado = detalles.stream()
+                .anyMatch(p -> p.getProducto().getId().equals(idProducto));
 
-        sumaTotal=detalles.stream().mapToDouble(dt->dt.getTotal()).sum();
+        if (!ingresado) {
+            detalles.add(detalleOrden);
+        }
+
+        sumaTotal = detalles.stream().mapToDouble(dt -> dt.getTotal()).sum();
 
         orden.setTotal(sumaTotal);
-        model.addAttribute("cart",detalles);
+        model.addAttribute("cart", detalles);
         model.addAttribute("orden", orden);
 
-        return"usuario/carrito";
+        return "usuario/carrito";
     }
+
 
     //metodo quitar producto del carrito
     @GetMapping("/delete/cart/{id}")
@@ -103,6 +111,13 @@ public class HomeController {
 
 
         return"usuario/carrito";
+    }
+
+    @GetMapping("/getCart")
+    public String getCart(Model model){
+        model.addAttribute("cart",detalles);
+        model.addAttribute("orden", orden);
+        return "/usuario/carrito";
     }
 
 }
