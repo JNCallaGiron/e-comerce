@@ -3,7 +3,9 @@ package com.jairo.spring_ecomerce.controller;
 import com.jairo.spring_ecomerce.model.DetalleOrden;
 import com.jairo.spring_ecomerce.model.Orden;
 import com.jairo.spring_ecomerce.model.Producto;
+import com.jairo.spring_ecomerce.model.Usuario;
 import com.jairo.spring_ecomerce.service.IProductoService;
+import com.jairo.spring_ecomerce.service.IUsuarioService;
 import jakarta.persistence.Id;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,9 @@ public class HomeController {
 
     @Autowired
     private IProductoService productoService;
+
+    @Autowired
+    private IUsuarioService usuarioService;
 
     //para almacenar los detalles de la orden
     List<DetalleOrden> detalles = new ArrayList<DetalleOrden>();
@@ -122,7 +127,13 @@ public class HomeController {
 
     //resumen de orden
     @GetMapping("/order")
-    public String orden(){
+    public String orden(Model model){
+
+        Usuario usuario = usuarioService.findUsuario(1L).get();
+
+        model.addAttribute("cart",detalles);
+        model.addAttribute("orden", orden);
+        model.addAttribute("usuario", usuario);
         return "usuario/resumenorden";
     }
 
