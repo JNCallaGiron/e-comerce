@@ -21,11 +21,11 @@ public class OrdenService implements IOrdenService  {
     }
 
     @Override
-    public Orden orden(Orden orden) {
+    public Orden saveOrden(Orden orden) {
         return ordenRepository.save(orden);
     }
 
-
+    @Override
     public String generarNumeroOrden(){
         int numero = 0;
         String numeroConcatenado ="";
