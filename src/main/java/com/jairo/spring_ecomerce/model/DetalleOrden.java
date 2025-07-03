@@ -21,8 +21,10 @@ public class DetalleOrden {
 
 
     //relacion con orden
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "orden_id")
     private Orden orden;
+
 
     //relacion con producto unidireccional
     @ManyToOne

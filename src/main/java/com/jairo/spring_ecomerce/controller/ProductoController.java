@@ -2,8 +2,10 @@ package com.jairo.spring_ecomerce.controller;
 
 import com.jairo.spring_ecomerce.model.Producto;
 import com.jairo.spring_ecomerce.model.Usuario;
+import com.jairo.spring_ecomerce.service.IUsuarioService;
 import com.jairo.spring_ecomerce.service.ProductoService;
 import com.jairo.spring_ecomerce.service.UploadFileService;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,6 +28,9 @@ public class ProductoController {
     @Autowired
     private UploadFileService upload;
 
+    @Autowired
+    private IUsuarioService usuarioService;
+
     @GetMapping("")
     public String show(Model model){
         model.addAttribute("productos",productoService.listProductos());
@@ -39,9 +44,10 @@ public class ProductoController {
 
     @PostMapping("/save")
     public String save(Producto producto,
-                       @RequestParam("img") MultipartFile file) throws IOException {
+                       @RequestParam("img") MultipartFile file,
+                       HttpSession session) throws IOException {
         log.info("Este es el objeto producto {}", producto);
-        Usuario u = new Usuario(1L,"","","","","","","",null,null);
+        Usuario u = usuarioService.findUsuario(Long.parseLong(session.getAttribute("idUsuario").toString())).get();
         producto.setUsuario(u);
 
         //imagen cargada por primera vez

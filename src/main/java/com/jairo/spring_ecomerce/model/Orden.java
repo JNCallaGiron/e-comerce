@@ -3,7 +3,9 @@ package com.jairo.spring_ecomerce.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Getter @Setter
 @NoArgsConstructor
@@ -26,6 +28,7 @@ public class Orden {
     private Usuario usuario;
 
     //relacion con detalle
-    @OneToOne(mappedBy = "orden")
-    private DetalleOrden detalle;
+    @OneToMany(mappedBy = "orden", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<DetalleOrden> detalles = new ArrayList<>();
+
 }
