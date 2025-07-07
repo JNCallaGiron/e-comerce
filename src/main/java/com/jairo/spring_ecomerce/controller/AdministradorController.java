@@ -1,6 +1,7 @@
 package com.jairo.spring_ecomerce.controller;
 
 import com.jairo.spring_ecomerce.model.Producto;
+import com.jairo.spring_ecomerce.service.IOrdenService;
 import com.jairo.spring_ecomerce.service.IProductoService;
 import com.jairo.spring_ecomerce.service.IUsuarioService;
 import com.jairo.spring_ecomerce.service.ProductoService;
@@ -23,6 +24,9 @@ public class AdministradorController {
     @Autowired
     private IUsuarioService usuarioService;
 
+    @Autowired
+    private IOrdenService ordenService;
+
     @GetMapping("")
     public String home(Model model){
         List<Producto> productos= productoService.listProductos();
@@ -33,6 +37,12 @@ public class AdministradorController {
     public String usuarios(Model model){
         model.addAttribute("usuarios", usuarioService.findAll());
         return"administrador/usuarios";
+    }
+
+    @GetMapping("/ordenes")
+    public String ordenes(Model model){
+        model.addAttribute("ordenes",ordenService.listOrden());
+        return"administrador/ordenes";
     }
 
 }
