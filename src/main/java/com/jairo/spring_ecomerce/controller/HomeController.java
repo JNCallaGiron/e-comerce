@@ -50,6 +50,9 @@ public class HomeController {
                        HttpSession session){
         log.info("Sesion del usuario {}", session.getAttribute("idUsuario"));
         model.addAttribute("productos", productoService.listProductos());
+
+        //session
+        model.addAttribute("sesion",session.getAttribute("idUsuario"));
         return "usuario/home";
     }
 
@@ -71,7 +74,8 @@ public class HomeController {
     @PostMapping("/cart")
     public String addCart(@RequestParam Long id,
                           @RequestParam Integer cantidad,
-                          Model model){
+                          Model model,
+                          HttpSession session){
         DetalleOrden detalleOrden = new DetalleOrden();
         Producto producto = new Producto();
         double sumaTotal= 0;
@@ -102,6 +106,8 @@ public class HomeController {
         model.addAttribute("cart", detalles);
         model.addAttribute("orden", orden);
 
+        model.addAttribute("sesion",session.getAttribute("isUsuario"));
+
         return "usuario/carrito";
     }
 
@@ -109,7 +115,8 @@ public class HomeController {
     //metodo quitar producto del carrito
     @GetMapping("/delete/cart/{id}")
     public String deleteProductCart(@PathVariable Long id,
-                                    Model model){
+                                    Model model,
+                                    HttpSession session){
 
         //lista nueva de productos
         List<DetalleOrden>ordenesNueva=new ArrayList<DetalleOrden>();
@@ -127,14 +134,20 @@ public class HomeController {
         model.addAttribute("cart",detalles);
         model.addAttribute("orden", orden);
 
+        model.addAttribute("sesion",session.getAttribute("isUsuario"));
+
 
         return"usuario/carrito";
     }
 
     @GetMapping("/getCart")
-    public String getCart(Model model){
+    public String getCart(Model model,
+                          HttpSession session){
         model.addAttribute("cart",detalles);
         model.addAttribute("orden", orden);
+
+        //sesion
+        model.addAttribute("sesion",session.getAttribute("idUsuario"));
         return "/usuario/carrito";
     }
 
@@ -148,6 +161,9 @@ public class HomeController {
         model.addAttribute("cart",detalles);
         model.addAttribute("orden", orden);
         model.addAttribute("usuario", usuario);
+
+        model.addAttribute("sesion",session.getAttribute("isUsuario"));
+
         return "usuario/resumenorden";
     }
 
