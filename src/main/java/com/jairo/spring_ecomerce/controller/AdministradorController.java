@@ -2,6 +2,7 @@ package com.jairo.spring_ecomerce.controller;
 
 import com.jairo.spring_ecomerce.model.Producto;
 import com.jairo.spring_ecomerce.service.IProductoService;
+import com.jairo.spring_ecomerce.service.IUsuarioService;
 import com.jairo.spring_ecomerce.service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,13 +20,19 @@ public class AdministradorController {
     @Autowired
     private IProductoService productoService;
 
+    @Autowired
+    private IUsuarioService usuarioService;
+
     @GetMapping("")
     public String home(Model model){
         List<Producto> productos= productoService.listProductos();
         model.addAttribute("productos", productos);
         return "administrador/home";
     }
-
-    //para que muestre las imagenes y procuctos en la home
+   @GetMapping("/usuarios")
+    public String usuarios(Model model){
+        model.addAttribute("usuarios", usuarioService.findAll());
+        return"administrador/usuarios";
+    }
 
 }
