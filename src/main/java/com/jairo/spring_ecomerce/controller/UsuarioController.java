@@ -1,15 +1,20 @@
 package com.jairo.spring_ecomerce.controller;
 
+import com.jairo.spring_ecomerce.model.Orden;
 import com.jairo.spring_ecomerce.model.Usuario;
+import com.jairo.spring_ecomerce.service.IOrdenService;
 import com.jairo.spring_ecomerce.service.IUsuarioService;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.swing.event.HyperlinkEvent;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -19,6 +24,9 @@ public class UsuarioController {
 
     @Autowired
     private IUsuarioService usuarioService;
+
+    @Autowired
+    private IOrdenService ordenService;
 
     //mostrar la pagina de registro
     @GetMapping("/registro")
@@ -59,5 +67,16 @@ public class UsuarioController {
         }
 
         return"redirect:/";
+    }
+
+    @GetMapping("/compras")
+    public String obtenerCompras(HttpSession session,
+                                 Model model){
+        model.addAttribute("sesion",session.getAttribute("idUsuario"));
+        Usuario usuario = usuarioService.findUsuario(Long.parseLong(session.getAttribute("idUsuario").toString())).get();
+        List<Orden>ordenes=ordenService.findByUsuario(usuario);
+
+        model.addAttribute("ordenes", ordenes);
+        return "usuario/compras";
     }
 }

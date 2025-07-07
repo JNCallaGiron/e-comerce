@@ -1,6 +1,7 @@
 package com.jairo.spring_ecomerce.service;
 
 import com.jairo.spring_ecomerce.model.Orden;
+import com.jairo.spring_ecomerce.model.Usuario;
 import com.jairo.spring_ecomerce.repository.IDetalleOrdenRepository;
 import com.jairo.spring_ecomerce.repository.IOrdenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +51,10 @@ public class OrdenService implements IOrdenService  {
         }else if (numero < 10000)
             numeroConcatenado="000000" + String.valueOf(numero);
         return numeroConcatenado;
+    }
+
+    @Override
+    public List<Orden> findByUsuario(Usuario usuario) {
+        return ordenRepository.findByUsuario(usuario);
     }
 }
