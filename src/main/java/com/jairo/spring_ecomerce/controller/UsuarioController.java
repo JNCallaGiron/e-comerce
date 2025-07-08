@@ -7,6 +7,7 @@ import com.jairo.spring_ecomerce.service.IUsuarioService;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +30,8 @@ public class UsuarioController {
     @Autowired
     private IOrdenService ordenService;
 
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
     //mostrar la pagina de registro
     @GetMapping("/registro")
     public  String create(){
@@ -39,8 +42,8 @@ public class UsuarioController {
     @PostMapping("/save")
     public String save(Usuario usuario){
         log.info("usaurio registro{}", usuario);
-
         usuario.setTipo("USER");
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         usuarioService.saveUsuario(usuario);
 
         return "redirect:/";
