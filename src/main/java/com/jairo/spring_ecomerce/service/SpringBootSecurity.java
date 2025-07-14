@@ -36,26 +36,6 @@ public class SpringBootSecurity {
                 )
                 .build();
     }
-
-    /*@Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf(csrf -> csrf.disable())
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/administrador/**").hasRole("ADMIN")
-                        .requestMatchers("/productos/**").hasRole("ADMIN")
-                        .anyRequest().permitAll()
-                )
-                .formLogin(form -> form
-                        .loginPage("/usuario/login")
-                        .defaultSuccessUrl("/usuario/acceder", true)
-                        .permitAll()
-                )
-                .logout(logout -> logout.permitAll());
-
-        return http.build();
-    }
-*/
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
