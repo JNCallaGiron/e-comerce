@@ -7,6 +7,8 @@ import com.jairo.spring_ecomerce.service.IUsuarioService;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,7 +47,6 @@ public class UsuarioController {
         usuario.setTipo("USER");
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         usuarioService.saveUsuario(usuario);
-
         return "redirect:/";
     }
 
@@ -54,24 +55,28 @@ public class UsuarioController {
         return "usuario/login";
     }
 
-    @PostMapping("/acceder")
-    public String acceder(Usuario usaurio,
-                          HttpSession session){
-        Optional<Usuario> user = usuarioService.findByEmail(usaurio.getEmail());
 
-        if(user.isPresent()){
+    //
+    @GetMapping("/acceder")
+    public String acceder(HttpSession session) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        Optional<Usuario> user = usuarioService.findByEmail(email);
+
+        if (user.isPresent()) {
             session.setAttribute("idUsuario", user.get().getId());
-            if(user.get().getTipo().equals("ADMIN")){
+
+            if ("ADMIN".equalsIgnoreCase(user.get().getTipo())) {
                 return "redirect:/administrador";
-            }else{
+            } else {
                 return "redirect:/";
             }
-        }else {
-            log.info("usuario no existe");
         }
 
-        return"redirect:/";
+        return "redirect:/usuario/login?error";
     }
+
 
     @GetMapping("/compras")
     public String obtenerCompras(HttpSession session,

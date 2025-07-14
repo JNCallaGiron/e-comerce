@@ -17,6 +17,28 @@ public class SpringBootSecurity {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/administrador/**").hasRole("ADMIN")
+                        .requestMatchers("/productos/**").hasRole("ADMIN")
+                        .anyRequest().permitAll()
+                )
+                .formLogin(form -> form
+                        .loginPage("/usuario/login")
+                        .defaultSuccessUrl("/usuario/acceder", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/usuario/cerrar")
+                        .logoutSuccessUrl("/")
+                        .permitAll()
+                )
+                .build();
+    }
+
+    /*@Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
@@ -33,10 +55,9 @@ public class SpringBootSecurity {
 
         return http.build();
     }
-
+*/
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 }
