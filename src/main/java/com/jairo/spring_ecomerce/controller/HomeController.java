@@ -189,13 +189,22 @@ public class HomeController {
         return"redirect:/";
     }
     //para la barra de busqueda
-    @PostMapping("/search")
+    @GetMapping("/search")
     public String searchProduct(@RequestParam String nombre,
-                                Model model){
-        log.info("nombre del producto: {}", nombre); //nombre por que en el form html esta asi
-        List<Producto> productos= productoService.listProductos().stream().filter(
-                p -> p.getNombre().contains(nombre)).collect(Collectors.toList());
-        model.addAttribute("productos",productos);
-        return"usuario/home";
+                                Model model,
+                                HttpSession session) {
+        log.info("nombre del producto: {}", nombre);
+
+        List<Producto> productos = productoService
+                .listProductos()
+                .stream()
+                .filter(p -> p.getNombre().toLowerCase().contains(nombre.toLowerCase()))
+                .collect(Collectors.toList());
+
+        model.addAttribute("productos", productos);
+        model.addAttribute("sesion", session.getAttribute("idUsuario"));
+
+        return "usuario/home";
     }
+
 }

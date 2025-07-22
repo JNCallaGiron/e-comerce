@@ -53,7 +53,7 @@ public class ProductoController {
         //imagen cargada por primera vez
         if(producto.getId()==null) {//cuando se crea un producto
             String nombreImagen=upload.saveImage(file);
-            producto.setImagen(nombreImagen);
+            producto.setImagen(nombreImagen);   
         }else{
 
         }
