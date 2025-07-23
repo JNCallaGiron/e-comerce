@@ -14,19 +14,22 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @EnableMethodSecurity
 public class SpringBootSecurity {
 
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/administrador/**").hasRole("ADMIN")
-                        .requestMatchers("/productos/**").hasRole("ADMIN")
+                        // Rutas de admin (solo ADMIN)
+                        .requestMatchers("/administrador/**", "/productos/**").hasRole("ADMIN")
+                        // Rutas de compra (solo usuarios autenticados)
+                        .requestMatchers("/cart", "/order", "/saveOrder", "/delete/cart/**")
+                        .authenticated()
+                        //
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
                         .loginPage("/usuario/login")
-                        .defaultSuccessUrl("/usuario/acceder", true)
+                        .defaultSuccessUrl("/", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
