@@ -1,19 +1,17 @@
-# 1) Stage de build con Maven
-FROM maven:3.8.7-openjdk-17 AS build
+# 1) Stage de build con Maven + OpenJDK 17
+FROM maven:3.9.4-eclipse-temurin-17 AS build
 
 WORKDIR /workspace
-# Copiamos sólo pom.xml primero para cachear dependencias
+# Copia solo el pom primero para cachear dependencias
 COPY pom.xml .
-# Si tienes un settings.xml o certificados, también aquí
-
 RUN mvn dependency:go-offline -B
 
-# Ahora copiamos el código y compilamos
+# Copia el código y compila el fat-jar
 COPY src ./src
 RUN mvn clean package -DskipTests -B
 
-# 2) Stage de runtime ligero con JRE
-FROM openjdk:17-jdk-slim
+# 2) Stage de runtime con JDK Slim (para healthcheck + tu app)
+FROM openjdk:17-jdk-slim AS runtime
 
 # Instalamos curl para el healthcheck
 RUN apt-get update \
@@ -21,9 +19,7 @@ RUN apt-get update \
  && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-# Consumimos el JAR del primer stage
 COPY --from=build /workspace/target/spring-ecomerce-0.0.1-SNAPSHOT.jar app_ecomerce.jar
 
 EXPOSE 8080
-
 ENTRYPOINT ["java","-jar","/app/app_ecomerce.jar"]
