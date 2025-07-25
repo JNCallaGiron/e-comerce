@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: springboot-ecommerce
+    env: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        fromDatabase:
+          name: ecommerce-db
+          property: connectionString
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: ecommerce-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: ecommerce-db
+          property: password
+
+databases:
+  - name: ecommerce-db
+    databaseName: ecommerce
+    user: ecommerce_user
