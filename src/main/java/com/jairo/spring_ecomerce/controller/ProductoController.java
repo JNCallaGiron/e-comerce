@@ -89,8 +89,19 @@ public class ProductoController {
 
     @GetMapping("/delete/{id}")
     public String delete(@PathVariable Long id){
-        productoService.deleteProducto(id);
+        Optional<Producto> optionalProducto = productoService.getProducto(id);
+
+        if (optionalProducto.isPresent()) {
+            Producto producto = optionalProducto.get();
+
+            // Si en algún futuro quisieras eliminar la imagen en Cloudinary,
+            // aquí podrías hacerlo si guardás el public_id
+
+            productoService.deleteProducto(id);
+        }
+
         return "redirect:/productos";
     }
+
 }
 

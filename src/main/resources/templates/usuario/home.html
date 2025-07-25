@@ -25,7 +25,7 @@
   <div class="row text-center">
     <div class="col-lg-3 col-md-6 mb-4" th:each="prod : ${productos}">
       <div class="card h-100">
-        <img class="card-img-top" th:src="@{/images/{img}(img=${prod.imagen})}" alt="">
+        <img class="card-img-top" th:src="${prod.imagen}" alt="Imagen del producto" width="100" height="100">
         <div class="card-body">
           <p class="card-text" th:text="${prod.nombre}"></p>
         </div>
