@@ -8,7 +8,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -19,17 +18,20 @@ public class SpringBootSecurity {
         return http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // Rutas de admin (solo ADMIN)
                         .requestMatchers("/administrador/**", "/productos/**").hasRole("ADMIN")
-                        // Rutas de compra (solo usuarios autenticados)
-                        .requestMatchers("/cart", "/order", "/saveOrder", "/delete/cart/**")
-                        .authenticated()
-                        //
+                        .requestMatchers("/cart", "/order", "/saveOrder", "/delete/cart/**").authenticated()
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
                         .loginPage("/usuario/login")
-                        .defaultSuccessUrl("/", true)
+                        .successHandler((request, response, authentication) -> {
+                            var roles = authentication.getAuthorities().toString();
+                            if (roles.contains("ADMIN")) {
+                                response.sendRedirect("/administrador");
+                            } else {
+                                response.sendRedirect("/");
+                            }
+                        })
                         .permitAll()
                 )
                 .logout(logout -> logout
@@ -39,6 +41,7 @@ public class SpringBootSecurity {
                 )
                 .build();
     }
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
