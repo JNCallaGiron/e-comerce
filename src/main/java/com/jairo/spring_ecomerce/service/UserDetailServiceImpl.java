@@ -35,6 +35,9 @@ import java.util.Optional;
                     role = "ROLE_" + role;
                 }
 
+                System.out.println("ROL ASIGNADO AL USUARIO: " + role);
+
+
                 return User.builder()
                         .username(usuario.getEmail())
                         .password(usuario.getPassword())
