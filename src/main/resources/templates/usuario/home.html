@@ -8,11 +8,10 @@
 
   <!-- Custom styles for this template -->
   <link th:href="@{/static/css/heroic-features.css}" rel="stylesheet">
-
 </head>
 <body>
 
-<!-- Header segun sesión -->
+<!-- Header según sesión -->
 <div th:include="usuario/template_usuario.html::header" th:if="${sesion == null}"></div>
 <div th:include="usuario/template_usuario.html::header-user" th:unless="${sesion == null}"></div>
 
@@ -25,7 +24,8 @@
   <div class="row text-center">
     <div class="col-lg-3 col-md-6 mb-4" th:each="prod : ${productos}">
       <div class="card h-100">
-        <img class="card-img-top" th:src="${prod.imagen}" alt="Imagen del producto" width="100" height="100">
+        <img class="card-img-top" th:src="${prod.imagen}" alt="Imagen del producto"
+             style="width: 100%; height: 200px; object-fit: cover;">
         <div class="card-body">
           <p class="card-text" th:text="${prod.nombre}"></p>
         </div>
@@ -40,12 +40,11 @@
 </div>
 
 <div th:include="usuario/template_usuario.html::footer"></div>
+
 <!-- jQuery -->
 <script th:src="@{/static/vendor/jquery/jquery.min.js}"></script>
-
 <!-- Bootstrap bundle (incluye Popper) -->
 <script th:src="@{/static/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 
 </body>
 </html>
-
