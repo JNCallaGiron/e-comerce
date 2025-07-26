@@ -5,7 +5,6 @@
   <title>Home</title>
   <!-- Bootstrap core CSS -->
   <link th:href="@{/static/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
-
   <!-- Custom styles for this template -->
   <link th:href="@{/static/css/heroic-features.css}" rel="stylesheet">
 </head>
@@ -24,8 +23,10 @@
   <div class="row text-center">
     <div class="col-lg-3 col-md-6 mb-4" th:each="prod : ${productos}">
       <div class="card h-100">
-        <img th:src="${producto.imagen}" alt="Imagen del producto" class="img-fluid" style="max-height:
-         400px; object-fit: contain;">
+        <img th:src="${prod.imagen} ?: 'https://via.placeholder.com/300x200?text=Sin+imagen'"
+             alt="Imagen del producto"
+             class="img-fluid"
+             style="max-height: 400px; object-fit: contain;">
         <div class="card-body">
           <p class="card-text" th:text="${prod.nombre}"></p>
         </div>

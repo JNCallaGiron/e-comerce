@@ -56,8 +56,9 @@
     <tbody>
     <tr th:each="producto : ${productos}">
       <td>
-        <img th:src="${producto.imagen}" alt="Imagen del producto"
-             class="img-fluid" style="max-height: 400px; object-fit: contain;">
+        <img th:src="${producto.imagen} ?: '/images/default.jpg'"
+             alt="Imagen del producto" class="img-fluid"
+             style="max-height: 400px; object-fit: contain;">
       </td>
       <td th:text="${producto.nombre}"></td>
       <td th:text="${producto.descripcion}"></td>
