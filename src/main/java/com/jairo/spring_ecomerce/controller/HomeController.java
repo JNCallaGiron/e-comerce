@@ -232,6 +232,7 @@ import jakarta.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Controller
 @Slf4j
@@ -353,15 +354,26 @@ public class HomeController {
         return "redirect:/";
     }
 
-    /** 8) Búsqueda pública */
     @GetMapping("/search")
     public String search(@RequestParam("nombre") String nombre, Model model, HttpSession session) {
         List<Producto> encontrados = productoService.listProductos().stream()
                 .filter(p -> p.getNombre().toLowerCase().contains(nombre.toLowerCase()))
                 .toList();
+
         model.addAttribute("productos", encontrados);
         model.addAttribute("sesion", session.getAttribute("idUsuario"));
+
+        // Detectamos si el usuario logueado es admin
+        Long idUsuario = (Long) session.getAttribute("idUsuario");
+        if (idUsuario != null) {
+            Optional<Usuario> optUsuario = usuarioService.findUsuario(idUsuario);
+            if (optUsuario.isPresent() && "ADMIN".equalsIgnoreCase(optUsuario.get().getTipo())) {
+                return "administrador/home"; // 👈 redirecciona correctamente a la vista de admin
+            }
+        }
+
         return "usuario/home";
     }
+
 
 }

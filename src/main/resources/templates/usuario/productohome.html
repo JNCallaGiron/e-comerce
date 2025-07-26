@@ -25,7 +25,7 @@
   <div class="card mb-4">
     <div class="row no-gutters">
       <div class="col-lg-6">
-        <img class="img-fluid" th:src="@{/images/{img}(img=${producto.imagen})}" alt="">
+        <img class="img-fluid" th:src="${producto.imagen}" alt="Imagen del producto" style="max-height: 400px; object-fit: contain;">
       </div>
       <div class="col-lg-6 card-body">
 
